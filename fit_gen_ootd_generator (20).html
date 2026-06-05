@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOTDay👚🫧 - OOTD Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+body{
+    background:#f8f2ec;
+    color:#6b4f4f;
+    min-height:100vh;
+    padding:30px;
+}
+.container{max-width:1300px;margin:auto;}
+
+.header{
+    background:#fff8f3;
+    border-radius:30px;
+    padding:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+.logo{font-size:40px;font-weight:bold;color:#8b5e3c;}
+.logo span{color:#c58b72;}
+
+.menu{display:flex;gap:20px;font-size:18px;}
+.menu div{cursor:pointer;padding:8px 12px;border-radius:12px;transition:0.3s;}
+.menu div:hover{background:#f3e4da;}
+
+.main{display:grid;grid-template-columns:300px 1fr;gap:25px;}
+
+.sidebar{background:#fff8f3;padding:25px;border-radius:25px;height:fit-content;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+
+label{display:block;margin-bottom:8px;font-weight:600;}
+select,button{width:100%;padding:12px;border:none;border-radius:15px;}
+select{background:#f3e4da;color:#6b4f4f;margin-bottom:15px;}
+button{background:#a7be8c;color:white;font-size:18px;cursor:pointer;font-weight:bold;margin-top:10px;}
+button:hover{background:#8ca770;transform:scale(1.03);}
+
+.result{background:#fff8f3;border-radius:30px;padding:25px;box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+
+.section{display:none;}
+.section.active{display:block;}
+
+.main-card{text-align:center;}
+.outfit-icon{font-size:40px;margin:10px 0;}
+.outfit-info h2{font-size:32px;color:#8b5e3c;}
+.outfit-info p{font-size:18px;line-height:1.6;}
+
+.tags{margin-top:15px;}
+.tag{display:inline-block;background:#f3d9ca;padding:8px 15px;border-radius:30px;margin:5px;}
+
+.card-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{background:#fffdfb;padding:20px;border-radius:20px;box-shadow:0 5px 10px rgba(0,0,0,0.05);}
+
+.footer{margin-top:40px;text-align:center;padding:20px;color:#9b7c7c;}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+    <div class="logo">OOTDay👚🫧</div>
+    <div class="menu">
+        <div onclick="showSection('home')">Home</div>
+        <div onclick="showSection('saved')">Saved Outfit</div>
+        <div onclick="showSection('about')">About</div>
+    </div>
+</div>
+
+<div class="main">
+
+<div class="sidebar">
+    <h2>Choose Style</h2>
+    <select id="style">
+        <option>Casual</option>
+        <option>Streetwear</option>
+        <option>Old Money</option>
+        <option>Korean Style</option>
+        <option>Y2K</option>
+        <option>Soft Girl</option>
+    </select>
+    <button onclick="generateOOTD()">Generate OOTD</button>
+    <button onclick="saveOutfit()">Save Outfit</button>
+</div>
+
+<div class="result">
+
+<div id="home" class="section active">
+    <div class="main-card">
+        <div id="outfitIcon" class="outfit-icon">🐻🧺🍪🤎</div>
+        <div class="outfit-info">
+            <h2 id="outfitTitle">Select Style</h2>
+            <p id="outfitDesc">Choose a style to generate outfit</p>
+            <div class="tags" id="tags"></div>
+            <div style="margin-top:10px;font-size:14px;opacity:0.8;">by: Chintya, Jessiva, Nur Syahfitri</div>
+        </div>
+    </div>
+</div>
+
+<div id="saved" class="section">
+    <h2>Saved Outfit</h2>
+    <div class="card-list" id="savedList"></div>
+</div>
+
+<div id="about" class="section">
+    <h2>About OOTDay</h2>
+    <p>An app that helps you organize your clothes and get an outfit suggestions.<br>Stay stylish, stay confident. have a great day!!🌷✨</p>
+</div>
+
+</div>
+</div>
+
+<div class="footer">OOTDay © 2026</div>
+
+<script>
+const database={
+"Casual":[
+{icon:"CAS 1",title:"Urban Comfort",desc:"white oversized t-shirt with denim shorts and sneakers",tags:["Casual"]},
+{icon:"CAS 2",title:"Soft Morning",desc:"beige sweater with relaxed trousers and loafers",tags:["Casual"]},
+{icon:"CAS 3",title:"Weekend Ease",desc:"graphic tee with cargo pants and cap",tags:["Casual"]},
+{icon:"CAS 4",title:"Coffee Run",desc:"hoodie with jogger pants and slip-on shoes",tags:["Casual"]},
+{icon:"CAS 5",title:"Simple Street",desc:"plain shirt with straight jeans and sneakers",tags:["Casual"]}
+],
+"Streetwear":[
+{icon:"STR 1",title:"Bold Street",desc:"oversized graphic tee with baggy pants and sneakers",tags:["Streetwear"]},
+{icon:"STR 2",title:"Dark Flow",desc:"black hoodie with cargo pants and boots",tags:["Streetwear"]},
+{icon:"STR 3",title:"Urban Edge",desc:"windbreaker with tech pants and cap",tags:["Streetwear"]},
+{icon:"STR 4",title:"Night Ride",desc:"layered tee with ripped jeans and sneakers",tags:["Streetwear"]},
+{icon:"STR 5",title:"Concrete Mood",desc:"hoodie with wide pants and chunky shoes",tags:["Streetwear"]}
+],
+"Old Money":[
+{icon:"OLD 1",title:"Elegant Classic",desc:"cream knit sweater with tailored trousers",tags:["Old Money"]},
+{icon:"OLD 2",title:"Quiet Luxury",desc:"white shirt with beige slacks and leather shoes",tags:["Old Money"]},
+{icon:"OLD 3",title:"Minimal Grace",desc:"turtleneck with wool coat and formal pants",tags:["Old Money"]},
+{icon:"OLD 4",title:"Soft Prestige",desc:"linen shirt with pleated trousers and loafers",tags:["Old Money"]},
+{icon:"OLD 5",title:"Royal Calm",desc:"blazer with neutral pants and polished shoes",tags:["Old Money"]}
+],
+"Korean Style":[
+{icon:"KOR 1",title:"Seoul Soft",desc:"pastel cardigan with mini skirt and flats",tags:["Korean"]},
+{icon:"KOR 2",title:"K Drama Mood",desc:"oversized shirt with pleated skirt and boots",tags:["Korean"]},
+{icon:"KOR 3",title:"Winter Seoul",desc:"knit sweater with wide pants and scarf",tags:["Korean"]},
+{icon:"KOR 4",title:"Cute Campus",desc:"blouse with A-line skirt and sneakers",tags:["Korean"]},
+{icon:"KOR 5",title:"Soft Street Seoul",desc:"hoodie with skirt and socks combo",tags:["Korean"]}
+],
+"Y2K":[
+{icon:"Y2K 1",title:"Retro Flash",desc:"crop top with low rise jeans and sneakers",tags:["Y2K"]},
+{icon:"Y2K 2",title:"Digital Pop",desc:"baby tee with mini skirt and platform shoes",tags:["Y2K"]},
+{icon:"Y2K 3",title:"Futuristic Mood",desc:"metallic top with cargo pants and boots",tags:["Y2K"]},
+{icon:"Y2K 4",title:"Neon Dream",desc:"bright hoodie with baggy jeans and sneakers",tags:["Y2K"]},
+{icon:"Y2K 5",title:"Cyber Street",desc:"graphic top with parachute pants and shoes",tags:["Y2K"]}
+],
+"Soft Girl":[
+{icon:"SG 1",title:"Pink Dream",desc:"pink cardigan with pleated skirt and mary jane shoes",tags:["Soft Girl"]},
+{icon:"SG 2",title:"Cloud Mood",desc:"soft hoodie with shorts and socks",tags:["Soft Girl"]},
+{icon:"SG 3",title:"Pastel Calm",desc:"light sweater with skirt and flats",tags:["Soft Girl"]},
+{icon:"SG 4",title:"Cute Daily",desc:"blouse with mini skirt and sneakers",tags:["Soft Girl"]},
+{icon:"SG 5",title:"Soft Winter",desc:"knit sweater with tights and boots",tags:["Soft Girl"]}
+]
+};
+
+let current=null;
+
+function showSection(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    if(id==='home'){
+        spawnFlowers();
+    }
+    if(id==='saved') renderSaved();
+}
+
+function generateOOTD(){
+const s=document.getElementById('style').value;
+const list=database[s];
+const pick=list[Math.floor(Math.random()*list.length)];
+current=pick;
+
+document.getElementById('outfitIcon').innerText=pick.icon;
+document.getElementById('outfitTitle').innerText=pick.title;
+document.getElementById('outfitDesc').innerText=pick.desc;
+
+const tagBox=document.getElementById('tags');
+tagBox.innerHTML='';
+pick.tags.forEach(t=>{
+const span=document.createElement('span');
+span.className='tag';
+span.innerText=t;
+tagBox.appendChild(span);
+});
+}
+
+function saveOutfit(){
+if(!current) return;
+let saved=JSON.parse(localStorage.getItem('outfits')||'[]');
+saved.push(current);
+localStorage.setItem('outfits',JSON.stringify(saved));
+renderSaved();
+}
+
+function renderSaved(){
+const container=document.getElementById('savedList');
+container.innerHTML='';
+let saved=JSON.parse(localStorage.getItem('outfits')||'[]');
+if(saved.length===0){
+container.innerHTML='<div>No saved outfits yet</div>';return;
+}
+saved.forEach(o=>{
+const div=document.createElement('div');
+div.className='card';
+div.innerHTML='<h3>'+o.icon+' '+o.title+'</h3><p>'+o.desc+'</p>';
+container.appendChild(div);
+});
+}
+</script>
+
+</body>
+</html>
